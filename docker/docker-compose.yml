@@ -1,0 +1,29 @@
+services:
+  vault:
+    image: hashicorp/vault:1.18
+    container_name: login-vault
+    ports:
+      - "8200:8200"
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: dev-root-token
+      VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8200
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - vault_data:/vault/data
+
+  postgres:
+    image: postgres:18-alpine
+    container_name: login-postgres
+    ports:
+      - "5433:5433"
+    environment:
+      POSTGRES_DB: login
+      POSTGRES_USER: login
+      POSTGRES_PASSWORD: login
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
+volumes:
+  postgres_data:
+  vault_data:

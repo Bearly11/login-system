@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: login-app
+
+  config:
+    import: "vault://${VAULT_SECRET_PATH}"
+
+  cloud:
+    vault:
+      uri: ${VAULT_ADDR}
+      token: ${VAULT_TOKEN}
+      kv:
+        enabled: true
+        backend: secret
+
+
+
