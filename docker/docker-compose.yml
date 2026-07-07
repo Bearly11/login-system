@@ -11,18 +11,64 @@ services:
       - IPC_LOCK
     volumes:
       - vault_data:/vault/data
+    healthcheck:
+      test: [ "CMD-SHELL", "VAULT_ADDR=http://localhost:8200 VAULT_TOKEN=dev-root-token vault kv get -mount=secret login/app >/dev/null 2>&1" ]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
+  vault-init:
+    image: hashicorp/vault:1.18
+    container_name: login-vault-init
+    environment:
+      VAULT_ADDR: http://vault:8200
+      VAULT_TOKEN: dev-root-token
+    depends_on:
+      vault:
+        condition: service_started
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        seed_secrets(){
+          echo "--- Seeding Vault secrets ($$(date -u '+%H:%M:%S')) ---"
+          vault kv put secret/login/app \
+          DB_URL='jdbc:postgresql://login-postgres:5433/login' \
+          DB_USERNAME='login' \
+          DB_PASSWORD='123' 
+          echo 'Vault secrets seeded'
+        }
+        
+        echo 'Waiting for vault...'
+        until vault status >/dev/null 2>&1; do sleep 2;
+        done
+        
+        seed_secrets
+        
+        while true; do 
+          sleep 30
+          if ! vault kv get -mount=secret login/app >/dev/null 2>&1; then
+            echo '⚠ Vault secrets missing — re-seeding...'
+            seed_secrets
+          fi
+        done
+    restart: unless-stopped
+    
 
   postgres:
     image: postgres:18-alpine
     container_name: login-postgres
+    restart: unless-stopped
     ports:
-      - "5433:5433"
+      - "5433:5432"
     environment:
       POSTGRES_DB: login
       POSTGRES_USER: login
-      POSTGRES_PASSWORD: login
+      POSTGRES_PASSWORD: 123
     volumes:
       - postgres_data:/var/lib/postgresql
+
 
 volumes:
   postgres_data:
