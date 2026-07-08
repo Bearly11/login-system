@@ -22,7 +22,6 @@ public class LoginService implements UserLogin {
         }
         if(!user.getPassword().equals(request.getPassword())) {
             throw new RuntimeException("Invalid email or Password");
-
         }
         return null;
 
