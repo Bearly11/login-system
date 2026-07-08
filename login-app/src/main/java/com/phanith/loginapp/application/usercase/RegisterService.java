@@ -11,7 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.time.LocalDate;
 
-
+@SpringBootApplication(scanBasePackages = "com.phanith.command.exception")
 @RequiredArgsConstructor
 public class RegisterService implements UserRegister {
     private final UserRegisterDb userRegisterDb;

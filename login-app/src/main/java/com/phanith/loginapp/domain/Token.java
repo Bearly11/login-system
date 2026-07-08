@@ -13,8 +13,9 @@ import java.util.UUID;
 public class Token {
     private UUID id;
     private String token;
-    private Type type;
-    private LocalDate createAt;
-    private LocalDate updateAt;
+    private Type tokenType;
+    private boolean expired;
+    private boolean revoked;
+    private UUID userId;
 
 }

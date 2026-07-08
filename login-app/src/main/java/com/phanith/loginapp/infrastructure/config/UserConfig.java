@@ -10,10 +10,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class UserConfig {
+
     @Bean
-    public RegisterService registerService(UserRegisterDb userRegisterDb, UserMapper userMapper) {
-        return new RegisterService(userRegisterDb, userMapper);
+    public RegisterService registerService(UserRegisterDb userRegisterDb,UserMapper userMapper) {
+        return new RegisterService(userRegisterDb,userMapper);
     }
+
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

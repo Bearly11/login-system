@@ -26,6 +26,8 @@ public class Users {
     private String password;
     @Column(nullable = false, length = 5)
     private String gender;
+    @Column(name = "create_at")
     private LocalDate createAt;
+    @Column(name = "update_at")
     private LocalDate updateAt;
 }

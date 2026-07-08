@@ -1,8 +1,5 @@
 package com.phanith.loginapp.application.dtos.login;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 @AllArgsConstructor
@@ -34,6 +31,6 @@ public class UserRegisterRequest {
     )
     private String email;
     @NotBlank(message = "Password is required")
-    @Min(value = 8,message = "Password must be least more then 8 character")
+    @Size(min = 8,message = "Password must be least more then 8 character")
     private String password;
 }
