@@ -1,7 +1,11 @@
 package com.phanith.loginapp.infrastructure.config;
 
 import com.phanith.loginapp.application.mapper.UserMapper;
+import com.phanith.loginapp.application.port.out.UserLoginDb;
 import com.phanith.loginapp.application.port.out.UserRegisterDb;
+import com.phanith.loginapp.application.port.out.token.RevokeTokenDb;
+import com.phanith.loginapp.application.port.out.token.SaveTokenDb;
+import com.phanith.loginapp.application.usercase.LoginService;
 import com.phanith.loginapp.application.usercase.RegisterService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +18,11 @@ public class UserConfig {
     @Bean
     public RegisterService registerService(UserRegisterDb userRegisterDb,UserMapper userMapper) {
         return new RegisterService(userRegisterDb,userMapper);
+    }
+
+    @Bean
+    public LoginService loginService(UserLoginDb userLoginDb, SaveTokenDb saveTokenDb, RevokeTokenDb revokeTokenDb) {
+        return new LoginService(userLoginDb,saveTokenDb,revokeTokenDb);
     }
 
 

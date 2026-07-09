@@ -1,5 +1,7 @@
 package com.phanith.loginapp.application.mapper;
 
+import com.phanith.loginapp.application.dtos.login.AuthResponse;
+import com.phanith.loginapp.application.dtos.login.UserLoginRequest;
 import com.phanith.loginapp.application.dtos.login.UserRegisterRequest;
 import com.phanith.loginapp.domain.User;
 import org.mapstruct.Mapper;

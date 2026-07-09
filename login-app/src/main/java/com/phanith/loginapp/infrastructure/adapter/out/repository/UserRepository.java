@@ -1,5 +1,6 @@
 package com.phanith.loginapp.infrastructure.adapter.out.repository;
 
+import com.phanith.loginapp.domain.User;
 import com.phanith.loginapp.infrastructure.adapter.out.database.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 
