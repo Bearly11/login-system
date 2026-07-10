@@ -7,6 +7,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,11 +19,25 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Component
-@RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final SaveTokenDb saveTokenDb;
     private final CustomUserDetailService  customUserDetailService;
+
+    public JwtFilter(JwtService jwtService, @Lazy SaveTokenDb saveTokenDb, CustomUserDetailService customUserDetailService) {
+        this.jwtService = jwtService;
+        this.saveTokenDb = saveTokenDb;
+        this.customUserDetailService = customUserDetailService;
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
+        return path.contains("/swagger-ui") ||
+                path.contains("/v3/api-docs") ||
+                path.contains("webjars") ||
+                path.contains("/api/v1/user/");
+    }
 
     @Override
     protected void doFilterInternal(
@@ -33,7 +48,7 @@ public class JwtFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String username;
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }

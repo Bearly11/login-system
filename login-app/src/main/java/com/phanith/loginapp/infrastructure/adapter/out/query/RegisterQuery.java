@@ -20,6 +20,7 @@ public class RegisterQuery implements UserRegisterDb {
     @Override
     public void save(User request) {
         var user = new Users();
+        user.setId(request.getId());
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
         user.setGender(request.getGender());

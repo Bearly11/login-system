@@ -13,18 +13,18 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("api/v1/user")
+@RequestMapping("/api/v1/user/")
 public class UserController {
     private final UserRegister userRegister;
     private final UserLogin userLogin;
 
-    @PostMapping("/register")
+    @PostMapping("register")
     public ResponseEntity<Void> register(@RequestBody @Valid UserRegisterRequest dto){
         userRegister.register(dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
-    @PostMapping("/login")
+    @PostMapping("login")
     public ResponseEntity<AuthResponse> login(@RequestBody UserLoginRequest dto){
-        return ResponseEntity.ok()
+        return ResponseEntity.ok(userLogin.login(dto));
     }
 }
