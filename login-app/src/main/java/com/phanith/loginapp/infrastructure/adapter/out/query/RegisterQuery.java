@@ -1,6 +1,5 @@
 package com.phanith.loginapp.infrastructure.adapter.out.query;
 
-import com.phanith.loginapp.application.port.in.UserRegister;
 import com.phanith.loginapp.application.port.out.UserRegisterDb;
 import com.phanith.loginapp.domain.User;
 import com.phanith.loginapp.infrastructure.adapter.out.database.Users;

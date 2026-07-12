@@ -36,7 +36,7 @@ public class JwtFilter extends OncePerRequestFilter {
         return path.contains("/swagger-ui") ||
                 path.contains("/v3/api-docs") ||
                 path.contains("webjars") ||
-                path.contains("/api/v1/user/");
+                path.contains("/api/v1/user/**");
     }
 
     @Override

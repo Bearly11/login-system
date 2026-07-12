@@ -11,6 +11,7 @@ import com.phanith.loginapp.domain.User;
 import com.phanith.loginapp.domain.enums.Type;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 @RequiredArgsConstructor
@@ -18,13 +19,14 @@ public class LoginService implements UserLogin {
     private final UserLoginDb userLoginDb;
     private final SaveTokenDb saveTokenDb;
     private final RevokeTokenDb revokeTokenDb;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public AuthResponse login(UserLoginRequest request) {
         User user = userLoginDb.findByEmail(request.getEmail())
                 .orElseThrow(()->
                         new NotFoundException("User not found with email: " + request.getEmail()));
-        if(!user.getPassword().equals(request.getPassword())){
+        if(!passwordEncoder.matches(request.getPassword(),user.getPassword())){
             throw new UsernameNotFoundException("Invalid email or password");
         }
         revokeTokenDb.revokeAllTokens(user);

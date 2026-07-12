@@ -21,8 +21,10 @@ public class UserConfig {
     }
 
     @Bean
-    public LoginService loginService(UserLoginDb userLoginDb, SaveTokenDb saveTokenDb, RevokeTokenDb revokeTokenDb) {
-        return new LoginService(userLoginDb,saveTokenDb,revokeTokenDb);
+    public LoginService loginService(UserLoginDb userLoginDb, SaveTokenDb saveTokenDb, RevokeTokenDb revokeTokenDb,
+        PasswordEncoder passwordEncoder
+    ) {
+        return new LoginService(userLoginDb,saveTokenDb,revokeTokenDb,passwordEncoder);
     }
 
 

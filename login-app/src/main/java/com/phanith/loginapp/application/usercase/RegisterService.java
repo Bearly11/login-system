@@ -7,12 +7,11 @@ import com.phanith.loginapp.application.port.in.UserRegister;
 import com.phanith.loginapp.application.port.out.UserRegisterDb;
 import com.phanith.loginapp.domain.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
-@SpringBootApplication(scanBasePackages = "com.phanith.command.exception")
+
 @RequiredArgsConstructor
 public class RegisterService implements UserRegister {
     private final UserRegisterDb userRegisterDb;

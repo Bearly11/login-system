@@ -34,8 +34,8 @@ public class RevokeTokenQuery implements RevokeTokenDb {
         var storedToken = tokenRepository.findByToken(token)
                 .orElseThrow(()->
                         new RuntimeException("token not found"));
-        storedToken.setExpired(false);
-        storedToken.setRevoked(false);
+        storedToken.setExpired(true);
+        storedToken.setRevoked(true);
         tokenRepository.save(storedToken);
 
     }

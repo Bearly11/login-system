@@ -10,6 +10,7 @@ import com.phanith.loginapp.infrastructure.adapter.out.database.Tokens;
 import com.phanith.loginapp.infrastructure.adapter.out.database.Users;
 import com.phanith.loginapp.infrastructure.adapter.out.repository.TokenRepository;
 import com.phanith.loginapp.infrastructure.adapter.out.repository.UserRepository;
+import com.phanith.loginapp.security.CustomUserDetailService;
 import com.phanith.loginapp.security.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,7 +28,7 @@ public class SaveTokenQuery implements SaveTokenDb {
     private final TokenRepository tokenRepository;
     private final UserRepository userRepository;
     private final JwtService jwtService;
-    private final AuthenticationManager authenticationManager;
+    private final CustomUserDetailService customUserDetailService;
 
     @Override
     public void save(User user, String token, Type tokenType) {
@@ -54,17 +55,13 @@ public class SaveTokenQuery implements SaveTokenDb {
 
     @Override
     public String generateAccessToken(User user) {
-        UserDetails userDetails = (UserDetails) authenticationManager.
-                authenticate(
-                        new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
+        UserDetails userDetails = customUserDetailService.loadUserByUsername(user.getEmail());
         return jwtService.generateAccessToken(userDetails);
     }
 
     @Override
     public String generateRefreshToken(User user) {
-        UserDetails userDetails = (UserDetails) authenticationManager.
-                authenticate(
-                        new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
+        UserDetails userDetails = customUserDetailService.loadUserByUsername(user.getEmail());
         return jwtService.generateRefreshToken(userDetails);
     }
 }
