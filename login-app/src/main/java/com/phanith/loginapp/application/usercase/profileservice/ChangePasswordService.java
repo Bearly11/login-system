@@ -12,7 +12,7 @@ import com.phanith.loginapp.domain.*;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class ChangePassowordService implements ChangePassword{
+public class ChangePasswordService implements ChangePassword{
     private final UserLoginDb userLoginDb;
     private final ChangePasswordDb changePasswordDb;
     private final PasswordEncoder passwordEncoder;
@@ -25,6 +25,7 @@ public class ChangePassowordService implements ChangePassword{
             throw new NotFoundException("Old password is incorrect ");
         }
         String newPass = passwordEncoder.encode(request.getNewPassword());
+        user.setPassword(newPass);
         changePasswordDb.changePassword(email, newPass);
 
     }

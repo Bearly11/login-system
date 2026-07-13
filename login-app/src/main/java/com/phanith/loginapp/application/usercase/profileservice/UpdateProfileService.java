@@ -19,13 +19,13 @@ public class UpdateProfileService implements UpdateProfile{
     private final UserProfileMapper userProfileMapper;
 
     @Override
-    public UserProfileResponse updateProfile(String email,UserUpdateReqest reqest){
+    public UserProfileResponse updateProfile(String email,UserUpdateReqest request){
         User user = loginDb.findByEmail(email).
         orElseThrow(()-> new NotFoundException("Not found user"));
 
-        user.setFirstName(reqest.getFirstName());
-        user.setLastName(reqest.getLastName());
-        user.setGender(reqest.getGender());
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setGender(request.getGender());
         user.setUpdatedAt(LocalDate.now());
         
         updateProfileDb.updateProfile(user);
