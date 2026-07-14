@@ -1,0 +1,7 @@
+package com.phanith.command.exception;
+
+public class UnauthorizedException extends RuntimeException {
+    public UnauthorizedException(String message) {
+        super(message);
+    }
+}

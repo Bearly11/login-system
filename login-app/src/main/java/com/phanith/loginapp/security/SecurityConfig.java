@@ -1,6 +1,7 @@
 package com.phanith.loginapp.security;
 
 import com.phanith.loginapp.security.jwt.JwtFilter;
+import com.phanith.command.jwthandler.JwtAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,13 +21,17 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http)
             throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.disable())
                 .sessionManagement((session ->session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)))
+                .exceptionHandling(ex ->ex
+                        .authenticationEntryPoint(new JwtAuthenticationEntryPoint()))
                 .authorizeHttpRequests(auth -> auth
 
                                 .requestMatchers(

@@ -7,10 +7,12 @@ import com.phanith.loginapp.application.port.in.profile.ChangePassword;
 import com.phanith.loginapp.application.port.in.profile.DeleteAccount;
 import com.phanith.loginapp.application.port.in.profile.GetProfile;
 import com.phanith.loginapp.application.port.in.profile.UpdateProfile;
+import com.phanith.loginapp.security.SecurityUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,25 +23,29 @@ public class UserProfileController {
     private final UpdateProfile updateProfile;
     private final ChangePassword changePassword;
     private final DeleteAccount deleteAccount;
+    private final SecurityUtil securityUtil;
+
 
     @GetMapping("profile")
-    public ResponseEntity<UserProfileResponse> getProfile(@AuthenticationPrincipal String email){
-        return ResponseEntity.ok(getProfile.profile(email));
+    public ResponseEntity<UserProfileResponse> getProfile(){
+        return ResponseEntity.ok(getProfile.profile(currentEmail()));
 
     }
     @PutMapping("profile")
-    public ResponseEntity<UserProfileResponse> updateProfile(@AuthenticationPrincipal String email,
-                                                             @Valid @RequestBody UserUpdateReqest request){
-        return ResponseEntity.ok(updateProfile.updateProfile(email,request));
+    public ResponseEntity<UserProfileResponse> updateProfile(@Valid @RequestBody UserUpdateReqest request){
+        return ResponseEntity.ok(updateProfile.updateProfile(currentEmail(),request));
     }
     @PutMapping("change-password")
-    public ResponseEntity<Void> changePassword(@AuthenticationPrincipal String email, @Valid @RequestBody ChangePasswordRequest request){
-        changePassword.changePassword(email,request);
+    public ResponseEntity<Void> changePassword( @Valid @RequestBody ChangePasswordRequest request){
+        changePassword.changePassword(currentEmail(),request);
         return ResponseEntity.ok().build();
     }
     @DeleteMapping("delete")
-    public ResponseEntity<Void> deleteProfile(@AuthenticationPrincipal String email){
-        deleteAccount.deleteProfile(email);
+    public ResponseEntity<Void> deleteProfile(){
+        deleteAccount.deleteProfile(currentEmail());
         return ResponseEntity.ok().build();
+    }
+    private String currentEmail(){
+        return securityUtil.getCurrentUserEmail();
     }
 }

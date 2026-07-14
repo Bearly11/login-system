@@ -1,6 +1,7 @@
 package com.phanith.loginapp.application.usercase;
 
 import com.phanith.command.exception.NotFoundException;
+import com.phanith.command.exception.UnauthorizedException;
 import com.phanith.loginapp.application.dtos.login.AuthResponse;
 import com.phanith.loginapp.application.dtos.login.UserLoginRequest;
 import com.phanith.loginapp.application.port.in.UserLogin;
@@ -25,9 +26,9 @@ public class LoginService implements UserLogin {
     public AuthResponse login(UserLoginRequest request) {
         User user = userLoginDb.findByEmail(request.getEmail())
                 .orElseThrow(()->
-                        new NotFoundException("User not found with email: " + request.getEmail()));
+                        new UnauthorizedException("Invalid email or password "));
         if(!passwordEncoder.matches(request.getPassword(),user.getPassword())){
-            throw new UsernameNotFoundException("Invalid email or password");
+            throw new UnauthorizedException("Invalid email or password");
         }
         revokeTokenDb.revokeAllTokens(user);
         String access = saveTokenDb.generateAccessToken(user);

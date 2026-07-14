@@ -12,5 +12,6 @@ public interface TokenRepository extends JpaRepository<Tokens, UUID> {
 
     List<Tokens> findAllByUserIdAndExpiredFalseAndRevokedFalse(UUID id);
 
-    void deleteByUserId(UUID id);
+
+    void deleteByUser_Id(UUID userId);
 }

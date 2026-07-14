@@ -1,5 +1,6 @@
 package com.phanith.loginapp.application.usercase.profileservice;
 
+import com.phanith.command.exception.UnauthorizedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.phanith.command.exception.NotFoundException;
@@ -22,7 +23,7 @@ public class ChangePasswordService implements ChangePassword{
         User user = userLoginDb.findByEmail(email).
         orElseThrow(()-> new NotFoundException("Not found user"));
         if(!passwordEncoder.matches(request.getOldPassword(), user.getPassword())){
-            throw new NotFoundException("Old password is incorrect ");
+            throw new UnauthorizedException("Old password is incorrect ");
         }
         String newPass = passwordEncoder.encode(request.getNewPassword());
         user.setPassword(newPass);
