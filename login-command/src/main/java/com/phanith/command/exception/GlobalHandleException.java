@@ -28,12 +28,12 @@ public class GlobalHandleException {
     public ResponseEntity<ErrorMessage> handleDuplicateException(DuplicateException ex, WebRequest request) {
         ErrorMessage errorMessage = new ErrorMessage(
                 ex.getMessage(),
-                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.CONFLICT.value(),
                 new Date(),
                 request.getDescription(false)
 
         );
-        return new ResponseEntity<ErrorMessage>(errorMessage, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<ErrorMessage>(errorMessage, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
