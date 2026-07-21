@@ -10,6 +10,8 @@ import com.phanith.loginapp.application.port.out.profile.UpdateProfileDb;
 import com.phanith.loginapp.application.port.out.token.RevokeTokenDb;
 import com.phanith.loginapp.application.port.out.token.SaveTokenDb;
 import com.phanith.loginapp.application.usercase.LoginService;
+import com.phanith.loginapp.application.usercase.LogoutService;
+import com.phanith.loginapp.application.usercase.RefreshTokenService;
 import com.phanith.loginapp.application.usercase.RegisterService;
 import com.phanith.loginapp.application.usercase.profileservice.ChangePasswordService;
 import com.phanith.loginapp.application.usercase.profileservice.DeleteProfileService;
@@ -34,7 +36,14 @@ public class UserConfig {
     ) {
         return new LoginService(userLoginDb,saveTokenDb,revokeTokenDb,passwordEncoder);
     }
-
+    @Bean
+    public LogoutService logoutService(UserLoginDb userLoginDb,RevokeTokenDb revokeTokenDb ) {
+        return new LogoutService(userLoginDb,revokeTokenDb);
+    }
+    @Bean
+    public RefreshTokenService refreshTokenService(UserLoginDb userLoginDb,SaveTokenDb saveTokenDb, RevokeTokenDb revokeTokenDb) {
+        return new RefreshTokenService(userLoginDb,saveTokenDb,revokeTokenDb);
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -58,4 +67,5 @@ public class UserConfig {
     public DeleteProfileService deleteProfileService(UserLoginDb userLoginDb, DeleteAccountDb deleteAccountDb) {
         return new DeleteProfileService(deleteAccountDb,userLoginDb);
     }
+
 }

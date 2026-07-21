@@ -64,4 +64,24 @@ public class SaveTokenQuery implements SaveTokenDb {
         UserDetails userDetails = customUserDetailService.loadUserByUsername(user.getEmail());
         return jwtService.generateRefreshToken(userDetails);
     }
+
+    @Override
+    public String extractUsername(String token) {
+        return jwtService.extractUsername(token);
+    }
+
+    @Override
+    public boolean isRefreshTokenValid(String refreshToken) {
+        return tokenRepository.findByToken(refreshToken)
+                .filter(t->!t.isExpired() && !t.isRevoked())
+                .filter(t->t.getTokenType() ==Type.REFRESH)
+                .map(t->{
+                    try{
+                        return !jwtService.isTokenExpired(refreshToken);
+                    }catch (Exception e){
+                        return false;
+                    }
+                })
+                .orElse(false);
+    }
 }

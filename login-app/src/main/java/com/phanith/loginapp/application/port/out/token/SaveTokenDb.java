@@ -12,4 +12,8 @@ public interface SaveTokenDb {
     String generateAccessToken(User user);
     String generateRefreshToken(User user);
 
+    String extractUsername(String token);
+    boolean isRefreshTokenValid(String refreshToken);
+
+
 }

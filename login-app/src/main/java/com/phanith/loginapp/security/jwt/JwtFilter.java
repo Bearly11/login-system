@@ -1,9 +1,11 @@
 package com.phanith.loginapp.security.jwt;
 
 import com.phanith.loginapp.application.port.out.token.SaveTokenDb;
+import com.phanith.loginapp.security.CookieUtil;
 import com.phanith.loginapp.security.CustomUserDetailService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,24 @@ public class JwtFilter extends OncePerRequestFilter {
         this.saveTokenDb = saveTokenDb;
         this.customUserDetailService = customUserDetailService;
     }
+    private String resolveToken(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if(CookieUtil.ACCESS_COOKIE.equals(cookie.getName()) && !cookie.getValue().isEmpty()) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7).trim();
+            if (!token.isBlank()){
+                return token;
+            }
+        }
+        return null;
+    }
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
@@ -46,18 +66,14 @@ public class JwtFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain)
             throws ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
-        final String jwt;
+        final String jwt=resolveToken(request);
         final String username;
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
         try{
-            jwt = authHeader.substring(7).trim();
-            if(jwt.isBlank()){
-                filterChain.doFilter(request,response);
-                return;
-            }
+
             username = jwtService.extractUsername(jwt);
             if(username !=null && SecurityContextHolder.getContext().getAuthentication() == null){
 
