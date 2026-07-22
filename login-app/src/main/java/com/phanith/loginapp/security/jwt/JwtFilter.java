@@ -56,7 +56,9 @@ public class JwtFilter extends OncePerRequestFilter {
         return path.contains("/swagger-ui") ||
                 path.contains("/v3/api-docs") ||
                 path.contains("webjars") ||
-                path.contains("/api/v1/user/**");
+                path.equals("/api/v1/user/login") ||
+                path.equals("/api/v1/user/register") ||
+                path.equals("/api/v1/user/refresh");
     }
 
     @Override
@@ -68,7 +70,7 @@ public class JwtFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader("Authorization");
         final String jwt=resolveToken(request);
         final String username;
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        if (jwt == null) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -101,6 +103,7 @@ public class JwtFilter extends OncePerRequestFilter {
             e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("Invalid or Expired token");
+            return;
         }
         filterChain.doFilter(request,response);
 

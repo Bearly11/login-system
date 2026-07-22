@@ -38,8 +38,11 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     @PostMapping("login")
-    public ResponseEntity<AuthResponse> login(@RequestBody UserLoginRequest dto){
-        return ResponseEntity.ok(userLogin.login(dto));
+    public ResponseEntity<Void> login(@RequestBody UserLoginRequest dto, HttpServletResponse response){
+        AuthResponse tokens = userLogin.login(dto);
+        cookieUtil.addAccessTokenCookie(response,tokens.getAccessToken());
+        cookieUtil.addRefreshTokenCookie(response,tokens.getRefreshToken());
+        return ResponseEntity.ok().build();
     }
     @PostMapping("refresh")
     public ResponseEntity<Void> refresh(HttpServletRequest request, HttpServletResponse response){
