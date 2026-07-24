@@ -6,11 +6,13 @@ COPY pom.xml .
 
 COPY login-app/pom.xml  ./login-app/
 COPY login-command/pom.xml ./login-command/
+COPY login-task/pom.xml ./login-task/
 
 RUN mvn dependency:go-offline -B
 
 COPY login-app/src ./login-app/src
 COPY login-command/src ./login-command/src
+COPY login-task/src ./login-task/src
 
 RUN mvn clean package -DskipTests
 

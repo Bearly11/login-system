@@ -24,6 +24,7 @@
     <modules>
         <module>login-command</module>
         <module>login-app</module>
+        <module>login-task</module>
     </modules>
 
     <scm>

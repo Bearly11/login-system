@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: login-task
+
+  config:
+    import: "vault://${VAULT_SECRET_PATH}"
+
+  cloud:
+    vault:
+      uri: ${VAULT_ADDR}
+      token: ${VAULT_TOKEN}
+      fail-fast: true
+      kv:
+        enabled: true
+        backend: secret
+
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+debug: true
